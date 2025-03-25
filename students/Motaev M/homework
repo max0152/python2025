@@ -1,0 +1,61 @@
+def get_student_data(student_number):
+    name = input(f"Введите имя студента {student_number}: ")
+    while True:
+        try:
+            age = int(input(f"Введите возраст студента {student_number}: "))
+            if age <= 0:
+                print("Возраст должен быть положительным числом.")
+                continue
+            break
+        except ValueError:
+            print("Некорректный ввод возраста. Введите целое число.")
+    while True:
+        try:
+            grade = float(input(f"Введите средний балл студента {student_number}: "))
+            if grade < 0 or grade > 5:
+                print("Средний балл должен быть в диапазоне от 0 до 5.")
+                continue
+            break
+        except ValueError:
+            print("Некорректный ввод среднего балла. Введите число.")
+    group = input(f"Введите группу студента {student_number}: ")
+    return {"name": name, "age": age, "grade": grade, "group": group}
+
+
+def find_best_student(students):
+    best_student = students[0]
+    for student in students:
+        if student["grade"] > best_student["grade"]:
+            best_student = student
+    return best_student
+
+
+def calculate_average_age(students):
+    total_age = sum(student["age"] for student in students)
+    return total_age / len(students)
+
+
+def check_same_group(students):
+    groups = [student["group"] for student in students]
+    for i in range(len(groups)):
+        for j in range(i + 1, len(groups)):
+            if groups[i] == groups[j]:
+                return True, groups[i]
+    return False, None
+    
+students = []
+for i in range(1, 4):
+    student = get_student_data(i)
+    students.append(student)
+    
+best_student = find_best_student(students)
+print(f"\nСтудент с самым высоким баллом: {best_student['name']}, {best_student['age']} лет, группа {best_student['group']}, балл {best_student['grade']}")
+
+average_age = calculate_average_age(students)
+print(f"Средний возраст студентов: {average_age:.0f} лет")
+
+same_group, group_name = check_same_group(students)
+if same_group:
+    print(f"Есть студенты из одной группы: Да (группа {group_name})")
+else:
+    print("Нет студентов из одной группы.")
